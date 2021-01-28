@@ -1,0 +1,36 @@
+diff -Nru mybatis-3-mybatis-3.2.8/src/main/java/org/apache/ibatis/logging/log4j2/Log4j2AbstractLoggerImpl.java mybatis-3-mybatis-3.2.8.log4j2/src/main/java/org/apache/ibatis/logging/log4j2/Log4j2AbstractLoggerImpl.java
+--- mybatis-3-mybatis-3.2.8/src/main/java/org/apache/ibatis/logging/log4j2/Log4j2AbstractLoggerImpl.java	2014-10-10 18:44:34.000000000 +0200
++++ mybatis-3-mybatis-3.2.8.log4j2/src/main/java/org/apache/ibatis/logging/log4j2/Log4j2AbstractLoggerImpl.java	2016-08-25 12:32:27.624998558 +0200
+@@ -51,27 +51,27 @@
+ 
+   @Override
+   public void error(String s, Throwable e) {
+-    log.logIfEnabled(FQCN, Level.ERROR, MARKER, new SimpleMessage(s), e);
++    log.logIfEnabled(FQCN, Level.ERROR, MARKER, s, e);
+   }
+ 
+   @Override
+   public void error(String s) {
+-    log.logIfEnabled(FQCN, Level.ERROR, MARKER, new SimpleMessage(s), null);
++    log.logIfEnabled(FQCN, Level.ERROR, MARKER, s, (Throwable) null);
+   }
+ 
+   @Override
+   public void debug(String s) {
+-    log.logIfEnabled(FQCN, Level.DEBUG, MARKER, new SimpleMessage(s), null);
++    log.logIfEnabled(FQCN, Level.DEBUG, MARKER, s, (Throwable) null);
+   }
+ 
+   @Override
+   public void trace(String s) {
+-    log.logIfEnabled(FQCN, Level.TRACE, MARKER, new SimpleMessage(s), null);
++    log.logIfEnabled(FQCN, Level.TRACE, MARKER, s, (Throwable) null);
+   }
+ 
+   @Override
+   public void warn(String s) {
+-    log.logIfEnabled(FQCN, Level.WARN, MARKER, new SimpleMessage(s), null);
++    log.logIfEnabled(FQCN, Level.WARN, MARKER, s, (Throwable) null);
+   }
+ 
+ }
