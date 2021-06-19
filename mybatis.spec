@@ -1,13 +1,14 @@
 %bcond_with test
 Name:                mybatis
 Version:             3.2.8
-Release:             1
+Release:             2
 Summary:             SQL Mapping Framework for Java
 License:             Apache 2.0
 URL:                 https://github.com/mybatis/mybatis-3
 Source0:             https://github.com/mybatis/mybatis-3/archive/%{name}-%{version}.tar.gz
 Patch0:              %{name}-%{version}-commons-ognl.patch
 Patch1:              mybatis-3.2.8-log4j2.6.patch
+Patch2:              CVE-2020-26945.patch
 BuildRequires:       maven-local mvn(cglib:cglib) mvn(commons-logging:commons-logging)
 BuildRequires:       mvn(log4j:log4j:1.2.17) mvn(org.apache.commons:commons-ognl)
 BuildRequires:       mvn(org.apache.felix:maven-bundle-plugin)
@@ -82,5 +83,8 @@ opts="-f"
 %license LICENSE NOTICE
 
 %changelog
+* Sat Jun 19 2021 lingsheng <lingsheng@huawei.com> - 3.2.8-2
+- Fix CVE-2020-26945
+
 * Fri Jan 8 2021 chengzihan <chengzihan2@huawei.com> - 3.2.8-1
 - Package init
