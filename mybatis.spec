@@ -1,7 +1,7 @@
 %bcond_with test
 Name:                mybatis
 Version:             3.2.8
-Release:             3
+Release:             4
 Summary:             SQL Mapping Framework for Java
 License:             Apache 2.0
 URL:                 https://github.com/mybatis/mybatis-3
@@ -83,6 +83,9 @@ opts="-f"
 %license LICENSE NOTICE
 
 %changelog
+* Wed Dec 29 2021 wangkai <wangkai385@huawei.com> - 3.2.8-4
+- This package depends on log4j.After the log4j vulnerability CVE-2021-44832 is fixed,the version needs to be rebuild.
+
 * Fri Dec 24 2021 wangkai <wangkai385@huawei.com> - 3.2.8-3
 - This package depends on log4j.After the log4j vulnerability CVE-2021-45105 is fixed,the version needs to be rebuild.
 
