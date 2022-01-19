@@ -1,27 +1,19 @@
 %bcond_with test
 Name:                mybatis
-Version:             3.2.8
-Release:             3
+Version:             3.5.8
+Release:             1
 Summary:             SQL Mapping Framework for Java
 License:             Apache 2.0
 URL:                 https://github.com/mybatis/mybatis-3
 Source0:             https://github.com/mybatis/mybatis-3/archive/%{name}-%{version}.tar.gz
-Patch0:              %{name}-%{version}-commons-ognl.patch
-Patch1:              mybatis-3.2.8-log4j2.6.patch
-Patch2:              CVE-2020-26945.patch
-BuildRequires:       maven-local mvn(cglib:cglib) mvn(commons-logging:commons-logging)
-BuildRequires:       mvn(log4j:log4j:1.2.17) mvn(org.apache.commons:commons-ognl)
-BuildRequires:       mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires:       mvn(org.apache.logging.log4j:log4j-core)
-BuildRequires:       mvn(org.apache.maven.plugins:maven-enforcer-plugin)
-BuildRequires:       mvn(org.apache.maven.plugins:maven-site-plugin) mvn(org.javassist:javassist)
-BuildRequires:       mvn(org.mybatis:mybatis-parent:pom:) mvn(org.slf4j:slf4j-api)
-%if %{with test}
-BuildRequires:       mvn(commons-dbcp:commons-dbcp) mvn(junit:junit) mvn(org.apache.derby:derby)
-BuildRequires:       mvn(org.apache.geronimo.specs:geronimo-jta_1.1_spec)
-BuildRequires:       mvn(org.apache.geronimo.specs:specs:pom:) mvn(org.apache.velocity:velocity)
-BuildRequires:       mvn(org.hsqldb:hsqldb) mvn(org.mockito:mockito-core) mvn(postgresql:postgresql)
-%endif
+Source1:             mssql-jdbc-9.4.0.jre8.jar
+Source2:             ognl-3.3.0.jar
+Source3:             mybatis-parent-33.pom
+Source4:             oss-parent-9.pom
+Source5:             xmvn-reactor
+Patch0:              0001-add-javadoc-plugin-in-pom-file.patch
+BuildRequires:       maven maven-local java-1.8.0-openjdk-devel
+Requires:            java-1.8.0-openjdk javapackages-tools
 BuildArch:           noarch
 
 %description
@@ -48,11 +40,11 @@ Summary:             Javadoc for %{name}
 This package contains javadoc for %{name}.
 
 %prep
+mvn install:install-file -DgroupId=org.mybatis -DartifactId=mybatis-parent -Dversion=33 -Dpackaging=pom -Dfile=%{SOURCE3}
+mvn install:install-file -DgroupId=org.sonatype.oss -DartifactId=oss-parent -Dversion=9 -Dpackaging=pom -Dfile=%{SOURCE4}
 %autosetup -n %{name}-3-%{name}-%{version} -p1
 %pom_remove_dep org.slf4j:slf4j-log4j12
 %pom_remove_plugin :maven-pdf-plugin
-%pom_remove_plugin :jarjar-maven-plugin
-%pom_remove_plugin :cobertura-maven-plugin
 sed -i 's/\r//' LICENSE NOTICE
 %if %{with test}
 %pom_remove_dep javax.transaction:transaction-api
@@ -65,24 +57,33 @@ rm src/test/java/org/apache/ibatis/submitted/multipleresultsetswithassociation/M
 rm src/test/java/org/apache/ibatis/logging/LogFactoryTest.java
 %endif
 %mvn_file :%{name} %{name}
+mvn install:install-file -DgroupId=com.microsoft.sqlserver -DartifactId=mssql-jdbc -Dversion=9.4.0.jre8 -Dpackaging=jar -Dfile=%{SOURCE1}
+mvn install:install-file -DgroupId=ognl -DartifactId=ognl -Dversion=3.3.0 -Dpackaging=jar -Dfile=%{SOURCE2}
+cp %{SOURCE5} ./.xmvn-reactor
+echo `pwd` > absolute_prefix.log
+sed -i 's/\//\\\//g' absolute_prefix.log
+absolute_prefix=`head -n 1 absolute_prefix.log`
+sed -i 's/absolute-prefix/'"$absolute_prefix"'/g' .xmvn-reactor
 
 %build
-%if %{without test}
-opts="-f"
-%endif
-%mvn_build $opts -- -Dproject.build.sourceEncoding=UTF-8
-
+mvn -Dproject.build.sourceEncoding=UTF-8 -DskipTests package
 
 %install
 %mvn_install
+install -d -m 0755 %{buildroot}/%{_javadocdir}/%{name}
+install -m 0755 target/mybatis-3.5.8-javadoc.jar %{buildroot}/%{_javadocdir}/%{name}
 
 %files -f .mfiles
 %license LICENSE NOTICE
 
-%files javadoc -f .mfiles-javadoc
+%files javadoc
+%{_javadocdir}/mybatis
 %license LICENSE NOTICE
 
 %changelog
+* Wed Jan 19 2022 xu_ping <xuping33@huawei.com> - 3.5.8-1
+- Upgrade 3.5.8
+
 * Fri Dec 24 2021 wangkai <wangkai385@huawei.com> - 3.2.8-3
 - This package depends on log4j.After the log4j vulnerability CVE-2021-45105 is fixed,the version needs to be rebuild.
 
