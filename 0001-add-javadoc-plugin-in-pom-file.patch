@@ -1,0 +1,36 @@
+From 6cb2a3b9e3b74870eeec0e8aab7a5dc4d18d68e7 Mon Sep 17 00:00:00 2001
+From: wang--ge <wang__ge@126.com>
+Date: Wed, 19 Jan 2022 10:50:47 +0800
+Subject: [PATCH] add javadoc plugin in pom file
+
+---
+ pom.xml | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/pom.xml b/pom.xml
+index 9adf834..eb431ae 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -356,6 +356,19 @@
+           </excludes>
+         </configuration>
+       </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-javadoc-plugin</artifactId>
++        <version>3.0.0-M1</version>
++        <executions>
++          <execution>
++            <id>attach-javadocs</id>
++            <goals>
++              <goal>jar</goal>
++            </goals>
++          </execution>
++        </executions>
++      </plugin>
+     </plugins>
+ 
+     <resources>
+-- 
+2.30.0
+
