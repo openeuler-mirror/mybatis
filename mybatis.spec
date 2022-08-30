@@ -1,7 +1,7 @@
 %bcond_with test
 Name:                mybatis
 Version:             3.5.8
-Release:             1
+Release:             2
 Summary:             SQL Mapping Framework for Java
 License:             Apache 2.0
 URL:                 https://github.com/mybatis/mybatis-3
@@ -11,6 +11,9 @@ Source2:             ognl-3.3.0.jar
 Source3:             mybatis-parent-33.pom
 Source4:             oss-parent-9.pom
 Source5:             xmvn-reactor
+Source6:             byte-buddy-1.12.1.tar.gz
+Source7:             assertj-core-3.21.0.tar.gz
+Source8:             testcontainers-1.16.2.tar.gz
 Patch0:              0001-add-javadoc-plugin-in-pom-file.patch
 BuildRequires:       maven maven-local java-1.8.0-openjdk-devel
 Requires:            java-1.8.0-openjdk javapackages-tools
@@ -65,6 +68,13 @@ sed -i 's/\//\\\//g' absolute_prefix.log
 absolute_prefix=`head -n 1 absolute_prefix.log`
 sed -i 's/absolute-prefix/'"$absolute_prefix"'/g' .xmvn-reactor
 
+mkdir -p /home/abuild/.m2/repository/net/bytebuddy/byte-buddy
+tar -mxf %{SOURCE6} -C /home/abuild/.m2/repository/net/bytebuddy/byte-buddy/
+mkdir -p /home/abuild/.m2/repository/org/assertj/assertj-core
+tar -mxf %{SOURCE7} -C /home/abuild/.m2/repository/org/assertj/assertj-core/
+mkdir -p /home/abuild/.m2/repository/org/testcontainers/testcontainers
+tar -mxf %{SOURCE8} -C /home/abuild/.m2/repository/org/testcontainers/testcontainers/
+
 %build
 mvn -Dproject.build.sourceEncoding=UTF-8 -DskipTests package
 
@@ -81,6 +91,9 @@ install -m 0755 target/mybatis-3.5.8-javadoc.jar %{buildroot}/%{_javadocdir}/%{n
 %license LICENSE NOTICE
 
 %changelog
+* Fri Sep 23 2022 lvxiaoqian <xiaoqian@nj.iscas.ac.cn> - 3.5.8-2
+- add build dependencies
+
 * Tue Apr 19 2022 wangkai <wangkai385@h-partners.com> - 3.5.8-1
 - Upgrade 3.5.8
 
