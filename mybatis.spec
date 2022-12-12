@@ -1,7 +1,7 @@
 %bcond_with test
 Name:                mybatis
 Version:             3.5.8
-Release:             1
+Release:             2
 Summary:             SQL Mapping Framework for Java
 License:             Apache 2.0
 URL:                 https://github.com/mybatis/mybatis-3
@@ -81,6 +81,9 @@ install -m 0755 target/mybatis-3.5.8-javadoc.jar %{buildroot}/%{_javadocdir}/%{n
 %license LICENSE NOTICE
 
 %changelog
+* Mon Aug 22 2022 wangkai <wangkai385@h-partners.com> - 3.5.8-2
+- Rebuild for log4j 2.17.2 fix CVE-2021-44832
+
 * Wed Jan 19 2022 xu_ping <xuping33@huawei.com> - 3.5.8-1
 - Upgrade 3.5.8
 
